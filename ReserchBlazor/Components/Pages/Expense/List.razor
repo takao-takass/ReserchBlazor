@@ -1,0 +1,51 @@
+﻿@page "/expense/list"
+@using Microsoft.EntityFrameworkCore
+@using ReserchBlazor.Data
+@attribute [StreamRendering]
+@inject SampleContext db
+
+<PageTitle>出費</PageTitle>
+
+<h1>出費</h1>
+
+<NavLink class="nav-link" href="Expense/Add">
+    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>新しい出費
+</NavLink>
+
+@if (Expenses == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DateTime</th>
+                <th>Title</th>
+                <th>金額</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var expense in Expenses)
+            {
+                <tr>
+                    <td>@expense.DateTime</td>
+                    <td>@expense.Title</td>
+                    <td>@expense.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Data.Tables.Expense[]? Expenses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+        Expenses = await db.Expenses.ToArrayAsync();
+    }
+}

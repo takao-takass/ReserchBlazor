@@ -1,0 +1,31 @@
+﻿@page "/expense/add"
+@using Microsoft.EntityFrameworkCore
+@using ReserchBlazor.Data
+@attribute [StreamRendering]
+@inject SampleContext db
+
+<PageTitle>新しい出費</PageTitle>
+
+<h1>新しい出費</h1>
+
+<EditForm Model="@item" OnValidSubmit="HandleValidSubmit" FormName="AddExpense">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputNumber @bind-Value="item.Id" />
+    <InputDate @bind-Value="item.DateTime" />
+    <InputText @bind-Value="item.Title" />
+    <InputNumber @bind-Value="item.Amount" />
+    <button type="submit">登録</button>
+</EditForm>
+
+@code {
+    private Data.Tables.Expense item = new Data.Tables.Expense();
+
+    private async Task HandleValidSubmit()
+    {
+        // TODO itemにformの値がbindされない事象
+        db.Expenses.Add(item);
+        await db.SaveChangesAsync();
+    }
+}
